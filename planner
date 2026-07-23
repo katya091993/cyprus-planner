@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кипр · планировщик гостей</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(180deg,#fef6e4 0%,#eaf6f6 100%);color:#2b3a42;line-height:1.5;padding-bottom:60px}
+.wrap{max-width:840px;margin:0 auto;padding:0 14px}
+.hero{background:linear-gradient(135deg,#2a9d8f 0%,#48b1c9 55%,#5bc0be 100%);color:#fff;border-radius:0 0 30px 30px;padding:30px 20px 26px;text-align:center;box-shadow:0 8px 24px rgba(42,157,143,.25);position:relative;overflow:hidden}
+.hero:before{content:"☀️";position:absolute;font-size:120px;top:-30px;right:-20px;opacity:.18}
+.hero h1{font-size:27px;font-weight:800;letter-spacing:-.5px;margin-bottom:6px;text-shadow:0 2px 6px rgba(0,0,0,.12)}
+.hero .sub{font-size:15px;opacity:.95;font-weight:600}
+.fact{display:inline-block;background:rgba(255,255,255,.2);border-radius:14px;padding:7px 12px;font-size:13px;font-weight:600;margin:12px 4px 0}
+.fact a{color:#fff}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px;align-items:center}
+.tab{background:#fff;border:2px solid #e0ecec;border-radius:22px;padding:8px 15px;font-size:14px;font-weight:700;cursor:pointer;color:#3a5560;transition:.15s}
+.tab.active{background:#2a9d8f;border-color:#2a9d8f;color:#fff}
+.tab .del{margin-left:6px;opacity:.6}
+.tab-add{background:#fff3d9;border:2px dashed #e8be6a;color:#b9791a;border-radius:22px;padding:8px 15px;font-size:14px;font-weight:700;cursor:pointer}
+h2.sec{font-size:21px;font-weight:800;margin:26px 0 4px;color:#1f5c6e;display:flex;align-items:center;gap:8px}
+.sec-note{font-size:13.5px;color:#6a7c84;margin-bottom:12px}
+/* overview */
+.ov{display:flex;gap:9px;overflow-x:auto;padding:6px 2px 12px;scrollbar-width:thin}
+.ov-chip{min-width:132px;background:#fff;border-radius:16px;padding:11px 12px;box-shadow:0 3px 10px rgba(31,92,110,.08);cursor:pointer;border-top:5px solid #2a9d8f;transition:.15s}
+.ov-chip.work{border-top-color:#ee8a5e}
+.ov-chip:hover{transform:translateY(-2px)}
+.ov-d{font-size:11px;font-weight:800;color:#8a9aa1;letter-spacing:.4px}
+.ov-t{font-size:13px;font-weight:700;color:#22323b;margin-top:3px;line-height:1.3}
+.ov-badge{font-size:11px;font-weight:700;margin-top:6px;display:inline-block}
+.ov-badge.car{color:#1c7d70}.ov-badge.work{color:#c15b34}
+/* day */
+.day{background:#fff;border-radius:22px;padding:15px 15px 17px;margin:14px 0;box-shadow:0 4px 16px rgba(31,92,110,.09);scroll-margin-top:12px}
+.day.car{border-left:7px solid #2a9d8f}.day.work{border-left:7px solid #ee8a5e}
+.day-head{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+.daynum{font-size:14px;font-weight:800;color:#fff;border-radius:12px;padding:7px 9px;min-width:40px;text-align:center}
+.day.work .daynum{background:#ee8a5e}.day.car .daynum{background:#2a9d8f}
+.day-titles{flex:1;min-width:150px}
+.date{font-size:12px;color:#8a9aa1;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.dtitle{font-size:17px;font-weight:800;color:#22323b}
+.badge{font-size:11.5px;font-weight:700;padding:6px 10px;border-radius:20px;white-space:nowrap}
+.badge.car{background:#d6f2ee;color:#1c7d70}.badge.work{background:#ffe3d6;color:#c15b34}
+.day-text{font-size:14px;color:#3f5058;margin:11px 2px 13px}
+.cards{display:flex;flex-direction:column;gap:11px}
+.pc{display:flex;gap:11px;background:#f8fbfb;border-radius:16px;overflow:hidden;border:1px solid #e7f0f0}
+.pc-img{width:112px;min-width:112px;background-size:cover;background-position:center;background-color:#dde}
+.pc-body{padding:10px 12px;flex:1}
+.pc-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.pc-name{font-weight:800;font-size:15px;color:#22323b}
+.rat{font-size:12px;color:#e6a417;font-weight:700;white-space:nowrap}
+.pc-tip{font-size:12.5px;color:#556;margin:5px 0 9px}
+.route{display:inline-block;background:#2a9d8f;color:#fff;font-size:12.5px;font-weight:700;text-decoration:none;padding:7px 13px;border-radius:20px}
+.route:hover{background:#23867a}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(225px,1fr));gap:13px}
+.rc{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 4px 14px rgba(31,92,110,.09)}
+.rc-img{height:125px;background-size:cover;background-position:center;position:relative;background-color:#dde}
+.rc-rat{position:absolute;top:9px;right:9px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;font-weight:700;padding:3px 9px;border-radius:20px}
+.rc-body{padding:11px 12px}
+.rc-name{font-weight:800;font-size:15.5px;color:#22323b}
+.chips{display:flex;gap:6px;margin:6px 0}
+.chip{font-size:11px;font-weight:700;padding:3px 9px;border-radius:12px}
+.chip.price{background:#eef6f6;color:#2a9d8f}.chip.rus{background:#ffeede;color:#d06a2c}
+.rc-note{font-size:12px;color:#556;margin-bottom:8px}
+.box{background:#fff8e8;border:1px solid #f6e4b8;border-radius:18px;padding:15px 17px;margin:14px 0;font-size:14px}
+.box h3{font-size:15px;margin-bottom:7px;color:#b9791a}
+.box ul{margin:6px 0 0 18px}.box li{margin:4px 0}
+.tips{background:#eaf6f6;border:1px solid #cfe8e8;border-radius:18px;padding:15px 17px;margin:14px 0;font-size:14px}
+.tips h3{color:#1f7d70;margin-bottom:8px}.tips li{margin:5px 0;list-style:none;padding-left:22px;position:relative}
+.tips li:before{content:"✅";position:absolute;left:0}
+.foot{text-align:center;font-size:12px;color:#8a9aa1;margin-top:24px;padding:0 10px}
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(20,40,45,.55);display:none;align-items:flex-start;justify-content:center;padding:24px 12px;z-index:50;overflow-y:auto}
+.overlay.on{display:flex}
+.modal{background:#fff;border-radius:22px;max-width:560px;width:100%;padding:22px 20px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.modal h3{font-size:19px;color:#1f5c6e;margin-bottom:4px}
+.modal p.hint{font-size:13px;color:#77878e;margin-bottom:14px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12.5px;font-weight:700;color:#4a5b62;margin-bottom:4px}
+.field input{width:100%;border:2px solid #e0ecec;border-radius:12px;padding:10px 12px;font-size:15px;font-family:inherit}
+.field input:focus{outline:none;border-color:#2a9d8f}
+.dayrow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 4px;border-bottom:1px solid #eef4f4}
+.dayrow .dl{font-size:13.5px;font-weight:600}
+.toggle{border:2px solid #e0ecec;background:#fff;border-radius:20px;padding:6px 12px;font-size:12.5px;font-weight:700;cursor:pointer;min-width:130px;text-align:center}
+.toggle.car{background:#d6f2ee;border-color:#2a9d8f;color:#1c7d70}
+.toggle.work{background:#ffe3d6;border-color:#ee8a5e;color:#c15b34}
+.toggle.fixed{opacity:.7;cursor:default}
+.btns{display:flex;gap:10px;margin-top:16px}
+.btn{flex:1;border:none;border-radius:14px;padding:12px;font-size:15px;font-weight:800;cursor:pointer}
+.btn.primary{background:#2a9d8f;color:#fff}.btn.ghost{background:#eef4f4;color:#4a5b62}
+.save-note{font-size:11.5px;color:#9aa;text-align:center;margin-top:8px}
+</style></head><body>
+<div class="hero">
+  <h1>🌊 Кипр · планировщик отдыха 🌞</h1>
+  <div class="sub">База: Закаки · Dimitri Hatzi 6</div>
+  <span class="fact">🏠 <a href="https://www.google.com/maps/search/?api=1&query=Dimitri%20Hatzi%206,%20Zakaki,%20Limassol" target="_blank">Дом на карте</a></span>
+  <span class="fact">🚗 машина = поездки по острову</span>
+  <span class="fact">🚶🚌 без машины = Лимассол пешком</span>
+</div>
+<div class="wrap">
+  <div class="tabs" id="tabs"></div>
+
+  <h2 class="sec" id="planTitle">🗓️ План</h2>
+  <div class="sec-note">Нажмите на день в ленте, чтобы перейти к нему. У каждой точки — кнопка «Построить маршрут» (Google Maps).</div>
+  <div class="ov" id="overview"></div>
+  <div id="days"></div>
+
+  <div class="box">
+    <h3>🚌 Как перемещаться без машины</h3>
+    Главный автобус — <b>№30</b> (EMEL): от <b>MY MALL</b> (рядом с домом) вдоль всей набережной — марина, старый порт, центр, Молос, дальше к пляжам.
+    <ul>
+      <li>Билет у водителя: <b>2 €</b> разовый, <b>5 €</b> безлимит на день (после 21:00 — 3 €).</li>
+      <li>Живое расписание — приложение <b>Moovit</b> или EMEL.</li>
+      <li>Lady's Mile ближе всего к дому, но без машины неудобен — в пешие дни берите Dasoudi по №30.</li>
+    </ul>
+  </div>
+
+  <h2 class="sec">🍽️ Где вкусно поесть</h2>
+  <div class="sec-note">€ бюджетно · €€ средне · €€€ дорого. 🗣️ — точно русскоязычный персонал (в Лимассоле русский понимают почти везде).</div>
+  <div class="grid" id="restos"></div>
+
+  <h2 class="sec">🏖️ Пляжи на выбор</h2>
+  <div class="sec-note">Домашний Lady's Mile, Dasoudi по автобусу, западные Pissouri/Avdimou/Kourion — на машинные дни.</div>
+  <div class="cards" id="beaches"></div>
+
+  <div class="tips">
+    <h3>🧭 Практичные заметки</h3>
+    <ul style="margin-left:0">
+      <li>Жара 33–36°: выезжать до 9 утра, полдень — под море/тень, воду брать везде.</li>
+      <li>Античные объекты 2,5–4,5 €; монастыри и пляжи бесплатно (шезлонги ~2,5–10 €).</li>
+      <li>В монастырь Киккос и мечеть — плечи и колени прикрыть.</li>
+      <li>Порядок дней можно тасовать под погоду и настроение.</li>
+    </ul>
+  </div>
+  <div class="foot">Рейтинги и часы работы ориентировочные — уточняйте перед выездом. Добавленные гости сохраняются в этом браузере. Хорошего отдыха! 🐢</div>
+</div>
+<div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
+<script>const DATA = {"PLACES": {"marina": ["Марина Лимассола", 4.7, 34.6702125, 33.040437, "ChIJ4dTjb_4y5xQRF7roh5_Lrh8", "https://lh3.googleusercontent.com/place-photos/AG9NLjAVigl-dpOhduAJjdgTrq2UDqEVJgxJzuZlqNrIxCVOxXbV12PvAWS1Cfxaf9tHsFS3FGT_8DUstgy-JVgnXkFGDVQ6AOqlXCxRZl1M20gs6XpH0B3A02WEqtE2i6jJDcoxLmhfYgsbe7ImYA=s4800-w800-h600", "Яхты, кафе, вечерняя прогулка у воды."], "castle": ["Старый город и замок", 4.4, 34.6724058, 33.041987, "ChIJGYgNcAIz5xQRZgxw5rlAj8I", "https://lh3.googleusercontent.com/place-photos/AG9NLjBOP94-fh08SLWDnCzHu10fudJmjV1PRURaAw82DhOsBBK0vwlsGb48sAV3Cl6PiecjPwtJASHNlB1YYlupoU-AS4nbxvQ-38Ua5Kbb_dF4TfCeozXPIDKnOyGnCqHev0jDLnCMV4pDFbNhBlE=s4800-w800-h600", "Средневековый замок и переулки. Вход ~4,50 €."], "kourion": ["Курион (античность)", 4.7, 34.6644446, 32.8880218, "ChIJMcsOfAAl5xQRwQ8G8bnlkYM", "https://lh3.googleusercontent.com/place-photos/AG9NLjDdcmGI9XzO6h_RHeBiqSqFvuNpP9LzoSz5fmgmyu8o8xGWbs6xOkYJ1Pro6v2Yq078_G0jXDMqdjPkCnrdOoK2OqmKRfb9n3BnoxGRwLUY1DFk0um3eTcXq1EjNDZxf5p7C-lv1H9jyi_CPcw=s4800-w800-h600", "Мозаики и амфитеатр над морем. ~15 мин от Закаки."], "kolossi": ["Замок Колосси", 4.4, 34.6650154, 32.9338115, "ChIJRVUwISgw5xQRVNSXg3BSYcI", "https://lh3.googleusercontent.com/place-photos/AG9NLjBTUwfHDZFyGmSr6lAl3-oxv-D-djfofInYpt-Og9ozFaz3bjr_tHwj_eLrlXIwYxB2HrhKJExgEjVs8xrgwIUkuQea5ppySbE6TW-8PYUjdyGBQzll2Yao3YQ2VAQI95dk4RSzjOIRtOsoNuObQH3h=s4800-w800-h600", "Рыцарский замок в 10 мин от Куриона. Вход ~2,5 €."], "omodos": ["Деревня Омодос", 4.6, 34.8489219, 32.8077875, "ChIJB0OIhbY45xQRE293wO2Hwf4", "https://lh3.googleusercontent.com/place-photos/AG9NLjC-KiPvcjBWgKURundqVEpKbFa4ASSgpBrhglOpxicdfNfvdkkfa2kHVhlyYJoc29kFY15FxdkskEZN72IkcBtn5Y1SUZ186QP7Smm7wWUP4rWZGO9FeFz0LVQVRZgiD5CwinL7PZmRCUvtXh8=s4800-w800-h600", "Винная деревня с брусчаткой: кофе, вино, коммандария."], "kykkos": ["Монастырь Киккос", 4.8, 34.9837335, 32.741195, "ChIJzdzD9kFC5xQRsnZp3YCcCcM", "https://lh3.googleusercontent.com/place-photos/AG9NLjCp8zrYvQtmu1SKrbQI0-c1OHZwXTOMYD31EkxFoaROaKoxKNFY77oJtWWrqiMVN45egSZZkUtgBqCM07DfCtnNUyNkfihGgywNzGVpUOww1VLItJjbYhl4bttLCwLjTSEo3HoRoGXiMV_SEpxekHghRg=s4800-w800-h600", "Золотые мозаики, самый богатый монастырь. Плечи/колени прикрыть."], "millomeris": ["Водопад Милломерис", 4.4, 34.8839073, 32.8649113, "ChIJz0iUox5H5xQR9fdioRqTg2I", "https://lh3.googleusercontent.com/place-photos/AG9NLjD36j-Zv9LillLS4TjXezVVA-VvnykUXevTk5UfttRFgp0wydgRuso-pwbRyufwxq_lelnAfkZ47jy3o5iD5ms_40p54tYCeiZpKbLbq313ePiDlrKPFgQJsCAmcoAu7NpriST871fyUkgSlvU=s4800-w800-h600", "Самый высокий водопад Кипра, ~20 мин пешком, прохладно."], "petra": ["Скала Афродиты", 4.6, 34.663542, 32.627183, "ChIJd3fx5B0c5xQRjUN3EEr_7DI", "https://lh3.googleusercontent.com/place-photos/AG9NLjCwePahtqwwPxhOYm8Qrg4ZzBHLN0rh2U3sRdaMxo68stbAZSwLUi23J6qorT17lDe5-cdnZdb6u8DpeFUe4MnC13RgaBGNXKLY39rkZM3lVn5uc1El0KKZueMPzjFvfPlxFV_6p4l82bJR6S4cHixf4g=s4800-w800-h600", "Легендарное место рождения Афродиты, фото и купание."], "neapaphos": ["Мозаики Неа-Пафос", 4.6, 34.7560431, 32.4084714, "ChIJS3bgNNoG5xQRQnwjgVPRLsg", "https://lh3.googleusercontent.com/place-photos/AG9NLjCb0B8oicM7nErcBN4AVtD5qxAx6nAJ0bd422LZV-akl21iDjhxm-F6W1E9BdzgF28tNSnC2FKCwDRgBO-PrcoVwMTSkY08AhCgPFtbP0z3kNM0eFnUTaqWKxdcoxsELHC7hE8W8YxVR234XA=s4800-w800-h600", "Римские мозаики у моря (ЮНЕСКО). Шляпа и вода."], "latchi": ["Голубая лагуна (катер из Лачи)", 4.7, 35.041326, 32.393577, "ChIJi8bxkrZ15xQRGWBlPD0jeiE", "https://lh3.googleusercontent.com/place-photos/AG9NLjDxI2pztY7KPWJ65jh6GM1pomtbDFcGnV3_fEBhWmY_VSGyTY5_2AVkJ-etjE5ETj4MEG5_p0NyW4VUCPwl2OPso7RjMe6n4xjj1wR5jUvtGldpkn9Bvi3VsdqXSwGltApu2P-ZV1aRM-3Ir_A=s4800-w800-h600", "Морская прогулка в бирюзовую лагуну. Бронировать заранее."], "cavo": ["Каво Греко", 4.8, 34.9721212, 34.0720367, "ChIJUYUMCn3D3xQRTmEtWmFREYY", "https://lh3.googleusercontent.com/place-photos/AG9NLjDA3QgaQIpdAJxdkbahBI2I7d7ENed_jqNL46oB9wUHyq3gNkeWesaLKhGPjdYmpJZrB5dtZmH18XDLeenB2DDNuG_vmSHEcHQnvZ2PhdQFZKcMmanbMVDkasEX61DpszgzAmy2-21exzOKJA=s4800-w800-h600", "Морские пещеры и кристальная вода, тропы по мысу."], "nissi": ["Пляж Nissi Beach", 4.5, 34.9880828, 33.9688179, "ChIJjZUx-vPP3xQRubqKYiMZUTk", "https://lh3.googleusercontent.com/place-photos/AG9NLjAtqVTP1TXpKBh-3EDDi3utMl7CVsh9QkRh0u4cYvSoctyATB_JqH_PdXkTecUkHgYXjZUldy3o-bA7oSfyB-nYdhsnBxGQ6R8hJCYaSXNLJ1R7UgO7zH_dy0hO8Sfr1z23B-gmguY1zPFyFzQ=s4800-w800-h600", "Знаменитый бирюзовый пляж, вброд к островку."], "ledra": ["Никосия · Ледра", 4.3, 35.1741802, 33.361342, "ChIJKZjbDM0X3hQRWeWv2IpKplM", "https://lh3.googleusercontent.com/place-photos/AG9NLjDMDXMvpQg3EV0aymXL09Eu9Nr-ru_FDB586wbhLETaFywj5VznuV2FDlRUJADOauFFshs9u8WNMEAmN3uRSh6OpyYzEXuxVTemZ1e6v7RNX7ouPrQFHJAUFUfYIX6F9-WzFpFoR2WmdyPjRw=s4800-w800-h600", "Пешеходная улица и переход на север (взять паспорт)."], "hala": ["Хала Султан Текке", 4.2, 34.8855362, 33.6100426, "ChIJPRMj0Nac4BQRHwSLDuUbrb4", "https://lh3.googleusercontent.com/place-photos/AG9NLjCvsQj6oMEtAwcN4kxL4cqToPhjMgMti8U7-Rlo4T82tnT6mWggeLDpuXngQA6s874-MPPtaJV9zEEdFSZUQ1MmX3NWzUQoTKruR2vLhZ1Omt5GeJTEVgykBu5vjNfMYYYx7VSp3OSWW7Txjw=s4800-w800-h600", "Мечеть у солёного озера. По пути в аэропорт."], "finikoudes": ["Набережная Финикудес", 4.6, 34.9140928, 33.6381181, "ChIJr8RNPqKC4BQRZ5BFId87Cyg", "https://lh3.googleusercontent.com/place-photos/AG9NLjCUVGBxKx1hJbNEDh3n-GTum2D4ftyRDCln_H3jPkeFGznDhvYZ_ynBkgLkL-Mb7YNvvEzykbDFFdhu7m-rUTAY98g8E2hp29Ax8BfzaKEjXCiIwo1FXO4r9YuZt6Ou5Q5DVycHESittZegmA=s4800-w800-h600", "Пальмовая набережная Ларнаки — обед у моря."], "governors": ["Губернаторский пляж", 4.5, 34.7166667, 33.2708333, "ChIJ8Uyjb_fH4BQRQqYEc4a89go", "https://lh3.googleusercontent.com/place-photos/AG9NLjA--BrSlIRkGNcozMs_soH8p2C6Nk1rtirOxGlKA6gv40qOpgw-rtLOJ3aT61eBfOSrScK__cOHWF1x3WRKKffnTYWinSCdiFs7sCeCXKZPb-iAnqaEmDjPmFeSDPMjSdOiPFN3jz4RmvRo7Q=s4800-w800-h600", "Белые скалы и тёмный песок. Шезлонги ~2,5 €."], "ladysmile": ["Lady's Mile Beach", 4.4, 34.6146916, 33.0053741, "ChIJVyIrsMYt5xQR-9T_AK69qfE", "https://lh3.googleusercontent.com/place-photos/AG9NLjDCh4__pZJ-VYsdQHR9ceZq6I5OLjl6HP_lKkLXK6X2v7k3reamf827bqr9XPchaZjyhXKwEUDaIZcwHpt2_w3RBCf5aKoJNMlTgyllxTN07MkvokOxPMP4e4zzazHnqd7wquhBjNETG1mHzg=s4800-w800-h600", "Домашний пляж — длинный, мелкий. Ближе всего к Закаки (на машине)."], "molos": ["Набережная Молос", 4.7, 34.6743115, 33.046474, "ChIJg4lReRsz5xQRr7D4pVLdQgM", "https://lh3.googleusercontent.com/place-photos/AG9NLjD4kObs9oSc-6CTj40PJoDotMSZ0F7sedF_YQU3CTvmVl2baz6A4wqgf4dtz5I106KxyP2GG3JbVDCmqAE866Vbc2-CzFVd-5andyPk4COiHdw5FHVBkBO8iC5tWWMiV0gxBIcDmVRR1XEa=s4800-w800-h600", "7 км набережной со скульптурами и фонтанами. Кошки!"], "garden": ["Муниципальный сад", 4.4, 34.6831365, 33.0548039, "ChIJVfUUxRUz5xQRr7sa4qonT8w", "https://lh3.googleusercontent.com/place-photos/AG9NLjA0ECdLegxtH7xXuDNhxiDuBy4dlWsZMi2kMv4pg3dCXfvPT8V7CkKk7BufoYhRfkEb5LgRXa7FA8i3Ydi08bjedkRPgm6fKfCF5rUgheZzTKcuQFlxvvMf4_1pvxZCXAtBhgC4gG-s4fZLGQ=s4800-w800-h600", "Тенистый парк с мини-зоопарком. Спасение от жары."], "mymall": ["MY MALL (Закаки)", 4.3, 34.6527985, 32.9971829, "ChIJT5NCVwQy5xQR4nx0tcE7XX8", "https://lh3.googleusercontent.com/place-photos/AG9NLjDnBvQ8u0Gm7oF0RGs8ADl8KcAd0ntaYlJESEfIKBIH_bba9WoaefpgqtMlJdEm5Fm3dYSVT4rztBE0ONuL7_07HdJ1XK0hMp_j9pIDMmuw_M6z5NCb8Q6CNRV1l5fx4UxBd0D34eJkimL8340=s4800-w800-h600", "Рядом с домом: кондиционер, кино, каток. Старт автобуса №30."], "dasoudi": ["Dasoudi Beach", 4.3, 34.6925918, 33.0845741, "ChIJ82Td6lTN4BQRg3LJeyKOiWw", "https://lh3.googleusercontent.com/place-photos/AG9NLjCQd5zmAR6JC5tDethD0uckgG9JAwl0zGnMpTR0gZCGmGU8gtlG1BBUUv3vivvz_tLw0eyFD1KvbqggqoIjOSHTiCdvvyDKmEJ3zWJbZRoAymBBXLdPCb1v0Aoo-0oTyf_sShC1R8Jy-iuadFM=s4800-w800-h600", "Городской пляж в эвкалиптах, тень и кафе. Доезжает автобус №30."], "pissouri": ["Pissouri Beach 🏅", 4.5, 34.6492023, 32.7202463, "ChIJZfA0vf8h5xQRd_CzaNJffEc", "https://lh3.googleusercontent.com/place-photos/AG9NLjBAt8Xy9VnquDz05IAbrJJGPp0bkmlT_M18H5PiP5KTMUoyXINL1JeJmf-eq6UVkOtuOpBd-PjsWKqoQLZan5bmHsrKgfedRhsAete-CPjSPgwarV1nuHRIeV0j2q3LTL9MLt1WUwNZdFcdcA=s4800-w800-h600", "Голубой флаг, чистейшая вода, таверна. ~30 мин на запад."], "avdimou": ["Avdimou Beach", 4.8, 34.648056, 32.7462155, "ChIJ6ReJCSIj5xQRRyjdwKYDZB8", "https://lh3.googleusercontent.com/place-photos/AG9NLjAiW83bE3N9obY1dlGdgLdFih54adMcmHRVFOh-_BA9KRBh1sf5lv2OxKTEfXucLpHDkrgQbWB3Tfb3A1aPEPBM_JQL3wpHgRnm6HZeDn4cZ7jEMbU1xffxBqYHsPscAjhlWOcWugIALvxqpA=s4800-w800-h600", "Тихий полудикий пляж, будто частный. Воду брать с собой."], "kourionbeach": ["Kourion Beach", 4.7, 34.6658863, 32.8771663, "ChIJZ4CrlkAl5xQRC1st8B2ISOA", "https://lh3.googleusercontent.com/place-photos/AG9NLjBFFvDo-zdq4Jd1LKVfQxfiTK5rnVSpLtZCyUz28xr_m3m41Oti1RCiOypf8GCV6cQS73JYqHcOhBeaVvOJAY8OpJInZm3QP5tGVhX73PBfbkVSoZorrbDv5OLP3N8PsK2NOO_aG2dWaVNF5U4=s4800-w800-h600", "Широкий пляж под Курионом, знаменитые закаты. Бывают волны."]}, "CARPOOL": [{"title": "⛰️ Троодос — прохлада гор и вино", "places": ["omodos", "millomeris", "kykkos"], "text": "Машинный день в горах, где не жарко: винная деревня Омодос → водопад Милломерис → монастырь Киккос. Взять кофту."}, {"title": "🏛️ Пафос — мифы и мозаики", "places": ["petra", "neapaphos"], "text": "По пути — скала Афродиты, затем римские мозаики Неа-Пафос у моря, вечером гавань Пафоса."}, {"title": "🐬 Акамас · Голубая лагуна", "places": ["latchi"], "text": "Катер из гавани Лачи в бирюзовую Голубую лагуну на купание. Бронировать заранее."}, {"title": "🗺️ Запад: античность + пляж", "places": ["kourion", "kolossi", "kourionbeach"], "text": "Утром по прохладе Курион и Колосси (рядом с домом), потом западный пляж под холмом."}, {"title": "💎 Айя-Напа · лучшая вода острова", "places": ["cavo", "nissi"], "text": "Большой день на восток: Каво Греко и Nissi Beach. Выезжать пораньше (~1 ч 20 мин)."}, {"title": "🌅 Ларнака · озеро и набережная", "places": ["hala", "finikoudes"], "text": "Мечеть Хала Султан Текке у солёного озера и пальмовая набережная Финикудес."}, {"title": "🏖️ Ленивый день · Губернаторский пляж", "places": ["governors"], "text": "Разгрузочный машинный день: белые скалы и тёмный песок, таверна у моря."}, {"title": "🏝️ Западные дикие пляжи", "places": ["pissouri", "avdimou"], "text": "Голубой флаг Pissouri и уединённый Avdimou — красивая вода без толп."}], "WORKPOOL": [{"title": "🚶 Пеший старый Лимассол", "places": ["mymall", "molos", "castle"], "text": "От дома пешком до MY MALL и на автобусе №30 вдоль моря: старый порт → Молос → замок и старый город."}, {"title": "🏖️ Пляж Dasoudi + сад", "places": ["dasoudi", "garden"], "text": "Автобус №30 до пляжа Dasoudi (тень эвкалиптов), по пути — Муниципальный сад."}, {"title": "🌳 Набережная и парк", "places": ["molos", "garden"], "text": "Спокойный день: набережная Молос пешком и Муниципальный сад с мини-зоопарком."}, {"title": "🌆 Город и MY MALL", "places": ["mymall", "castle"], "text": "Старый город, магазины, кофейни; в полдень — прохлада MY MALL рядом с домом."}, {"title": "🏝️ Домашний пляж Lady's Mile", "places": ["ladysmile"], "text": "Ближайший к дому пляж (короткое такси/машина): длинный, мелкий, с тавернами."}], "ARRIVAL": {"title": "✈️ Приезд · встречаем в Ларнаке", "places": ["finikoudes", "marina", "molos"], "text": "Встреча в аэропорту Ларнаки. По пути домой — набережная Ларнаки (обед и купание), вечером лёгкая прогулка по марине и Молосу."}, "DEPARTURE": {"title": "✈️ Отъезд · через Ларнаку", "places": ["hala", "finikoudes"], "text": "Утро свободно у дома/на пляже. По пути в аэропорт — Хала Султан Текке или обед на Финикудес."}, "RESTOS": [["Terry's place", 4.8, 34.6841549, 33.0587495, "ChIJIZazcW8z5xQRGm8goxI0FmE", "https://lh3.googleusercontent.com/place-photos/AG9NLjBvkiGFE5ka3OQU32sDxHxp-ewG7ctMnJVoI_C2o5cSk0xSHoBDTnzZndiEdhr1i4DBgn5tRPfUcs5Jxa7kZtyoaOQvzl7Qg5x-DOJ-xUYHZgyJSRAvvrMisWkDsp6LNq9-XP38QG464lJUN7QTAs468Q=s4800-w800-h600", 1, 1, "Свежая рыба, огромные порции, бесплатные салат и фрукты. Вкусно+недорого. Вт — выходной."], ["Gulya's home cuisine", 4.5, 34.7066506, 33.1185306, "ChIJUdY_XnPL4BQRfHQO6rsoF5U", "https://lh3.googleusercontent.com/place-photos/AG9NLjAxVkbd5xvLoMgzjevbkyBgdmcQ0vXDkEt2BJJNPPQXSX2Azym6YdoayI73Jl3rUUpTzBsOHRugV89dI6nKPAhfsFzT7A2942TDV9RTM9YB2ce9xS-g_wT0VWwWPo6HQU-yMLUh99WW9otN7hobnzKjbA=s4800-w800-h600", 2, 1, "Домашняя русско-узбекская кухня: борщ, плов, пельмени, манты. Персонал русскоязычный."], ["Mostra Meze Tavern", 4.6, 34.6754273, 33.0431423, "ChIJgwz68YEz5xQRYO8XuChp7-s", "https://lh3.googleusercontent.com/place-photos/AG9NLjCeZ8BU8AYmXvGleH3GO9RWhEMPWjUKxPUMG031wSqiCGfHahJzvuHe6VsnaddEI6We9LpFTYkF-vV4J7QDNHPv6F18bP_nhCd4SUz8gP3aV9G3MMFaoxMjx65cD7Z0DF-5_xurhmVac4ed-SZQPrJ6=s4800-w800-h600", 2, 0, "Уютная мезе-таверна в старом городе, ~50 € на двоих. Ужин, Пн — выходной."], ["MEZE Taverna", 4.8, 34.6765731, 33.0474854, "ChIJ9eIcDBsz5xQR0UyVk2djSuc", "https://lh3.googleusercontent.com/place-photos/AG9NLjBAdDAgJPkOXLnNm5c1uKXE5jS0rEphRugF8UD5mEL7tQXBEtY7-4QFAyhsi_RD1Ys9c2UZRAsIjCoM-11jhlvBqfhrLGCY3K9DdrjdX2kVY6vSnhMq5bNcbYepcdFoNppi1JGPIkAJ9ekta_ptpnZiiw=s4800-w800-h600", 2, 0, "Легендарная мезе-таверна (5400+ отзывов), огромные порции. Вс — выходной."], ["Karatello Tavern", 4.5, 34.6720431, 33.0412267, "ChIJ3RLjP1Mz5xQRCjL7ZF2mnrs", "https://lh3.googleusercontent.com/place-photos/AG9NLjCszMm7o2Zhmo1qx28l91S4KhAmh9P9WfD6o-tFDWqlfHy8AA8nevIJU2XS662hWxj3q6ChrenhcfJm7DLdEqt8DH51D1ay21d4MVH2gQvTrqmFN4MDKrhl7EcA7tGTo32W6z3_mORpOVCf4g=s4800-w800-h600", 2, 0, "Атмосферная таверна в Carob Mill у замка. Отличное мезе. Ужин."], ["Dionysus Mansion", 4.7, 34.678927, 33.0395822, "ChIJq5ppJwQz5xQRB270VCoua7k", "https://lh3.googleusercontent.com/place-photos/AG9NLjCLl02sDXpRLgAG6cuUFdda5ofqfx6uStjc57JrkJUHoIgSi4WeJ9_OjtnrVaIehUHOPHQPpcbP7LEw7cNhRLJyzWleWlyv4sY1plm333Ds3Bop6vzP_rcLyCqLtzdBhW19KwHFoHI4igbNuA=s4800-w800-h600", 3, 0, "Красивый особняк с двориком — на особый вечер. Дороже. Вс — выходной."]], "BEACHES": ["ladysmile", "dasoudi", "governors", "kourionbeach", "pissouri", "avdimou", "nissi"], "SEED": {"id": "seed-ira-stas", "name": "Ира и Стас", "custom": true, "days": [{"date": "2026-08-17", "mode": "car", "title": "✈️ Приезд · встречаем в Ларнаке", "text": "Прилёт в Ларнаку в <b>10:00</b>. Катя встречает на машине. По пути домой — набережная Ларнаки (обед и купание), потом ~50 мин до Закаки. Вечером марина и Молос.", "places": ["finikoudes", "marina", "molos"]}, {"date": "2026-08-18", "mode": "work", "title": "🚶 Пеший Лимассол", "text": "Гости сами. От дома — до MY MALL и на автобусе №30 вдоль моря: старый порт → Молос → замок и старый город. Обед — Karatello или Terry's place.", "places": ["mymall", "molos", "castle"]}, {"date": "2026-08-19", "mode": "work", "title": "🏖️ Пляжный день · Dasoudi", "text": "Автобус №30 до пляжа Dasoudi (тень эвкалиптов, кафе). По пути — Муниципальный сад с мини-зоопарком.", "places": ["dasoudi", "garden"]}, {"date": "2026-08-20", "mode": "car", "title": "⛰️ Троодос — прохлада гор", "text": "Винная деревня Омодос → водопад Милломерис → монастырь Киккос. Взять кофту — наверху свежо.", "places": ["omodos", "millomeris", "kykkos"]}, {"date": "2026-08-21", "mode": "car", "title": "🏛️ Пафос — мифы и мозаики", "text": "Скала Афродиты → римские мозаики Неа-Пафос у моря → вечером гавань Пафоса.", "places": ["petra", "neapaphos"]}, {"date": "2026-08-22", "mode": "car", "title": "🐬 Акамас · Голубая лагуна", "text": "Катер из гавани Лачи в бирюзовую Голубую лагуну. Лучший «открыточный» день.", "places": ["latchi"]}, {"date": "2026-08-23", "mode": "car", "title": "🗺️ Запад рядом + пляж", "text": "Утром Курион и Колосси (совсем рядом), потом западный пляж: Kourion Beach или Pissouri.", "places": ["kourion", "kolossi", "kourionbeach", "pissouri"]}, {"date": "2026-08-24", "mode": "work", "title": "🌆 Город и море", "text": "Гости сами: старый город, магазины, кофейни; в жару — MY MALL рядом с домом. №30 на пляж или вечерний Молос.", "places": ["mymall", "molos", "ladysmile"]}, {"date": "2026-08-25", "mode": "work", "title": "🌳 Парк и пляж", "text": "Муниципальный сад, набережная Молос пешком, купание на Dasoudi (автобус №30).", "places": ["garden", "dasoudi"]}, {"date": "2026-08-26", "mode": "work", "title": "☕ Старый город", "text": "Лёгкий день по центру: старый город, сувениры, кофейни. Вечером — ужин в старом городе.", "places": ["castle", "garden"]}, {"date": "2026-08-27", "mode": "car", "title": "💎 Айя-Напа · лучшая вода", "text": "Каво Греко (морские пещеры, кристальная вода) и знаменитый Nissi Beach. Выезжать пораньше.", "places": ["cavo", "nissi"]}, {"date": "2026-08-28", "mode": "car", "title": "✈️ Отъезд · через Ларнаку", "text": "Вылет из Ларнаки в <b>18:40</b>. Утро свободно, выезд ~14:00. По пути — Хала Султан или Финикудес.", "places": ["hala", "finikoudes"]}]}, "BASE": {"name": "Закаки, Dimitri Hatzi 6", "q": "Dimitri Hatzi 6, Zakaki, Limassol"}};
+
+const $ = (s,r=document)=>r.querySelector(s);
+const MONTHS=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+const DOW=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function parseD(s){const p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
+function fmtShort(s){const d=parseD(s);return d.getDate()+' '+MONTHS[d.getMonth()];}
+function dow(s){return DOW[parseD(s).getDay()];}
+function dirlink(p){return 'https://www.google.com/maps/dir/?api=1&destination='+p[2]+','+p[3]+'&destination_place_id='+p[4];}
+function stars(r){let f=Math.floor(r),h=(r-f)>=0.5;return '★'.repeat(f)+(h?'½':'');}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// storage
+let GUESTS=[];
+function load(){
+  try{const raw=localStorage.getItem('cyprus_guests');if(raw){GUESTS=JSON.parse(raw);}}catch(e){}
+  if(!GUESTS.length){GUESTS=[JSON.parse(JSON.stringify(DATA.SEED))];}
+  // ensure seed present
+  if(!GUESTS.find(g=>g.id==='seed-ira-stas')){GUESTS.unshift(JSON.parse(JSON.stringify(DATA.SEED)));}
+}
+function save(){try{localStorage.setItem('cyprus_guests',JSON.stringify(GUESTS));}catch(e){}}
+
+let active=0;
+
+function buildPlan(g){
+  if(g.custom) return g.days;
+  const start=parseD(g.arrive),end=parseD(g.depart),days=[];
+  const dates=[];for(let d=new Date(start);d<=end;d.setDate(d.getDate()+1))dates.push(new Date(d));
+  const cd=new Set(g.carDates||[]);let ci=0,wi=0;
+  dates.forEach((dt,i)=>{
+    const ds=iso(dt);let tpl,mode;
+    if(i===0){tpl=DATA.ARRIVAL;mode='car';}
+    else if(i===dates.length-1){tpl=DATA.DEPARTURE;mode='car';}
+    else if(cd.has(ds)){tpl=DATA.CARPOOL[ci%DATA.CARPOOL.length];ci++;mode='car';}
+    else{tpl=DATA.WORKPOOL[wi%DATA.WORKPOOL.length];wi++;mode='work';}
+    days.push({date:ds,mode:mode,title:tpl.title,text:tpl.text,places:tpl.places});
+  });
+  return days;
+}
+
+function placeCard(key){
+  const p=DATA.PLACES[key];if(!p)return'';
+  return '<div class="pc"><div class="pc-img" style="background-image:url(\''+p[5]+'\')"></div>'
+    +'<div class="pc-body"><div class="pc-top"><span class="pc-name">'+esc(p[0])+'</span>'
+    +'<span class="rat">'+stars(p[1])+' '+p[1]+'</span></div>'
+    +'<p class="pc-tip">'+esc(p[6])+'</p>'
+    +'<a class="route" href="'+dirlink(p)+'" target="_blank" rel="noopener">📍 Построить маршрут</a></div></div>';
+}
+
+function render(){
+  const g=GUESTS[active];const days=buildPlan(g);
+  // tabs
+  let tabs='';GUESTS.forEach((gg,i)=>{
+    const del=gg.id==='seed-ira-stas'?'':'<span class="del" data-del="'+i+'">✕</span>';
+    tabs+='<div class="tab'+(i===active?' active':'')+'" data-tab="'+i+'">'+esc(gg.name)+del+'</div>';
+  });
+  tabs+='<div class="tab-add" id="addBtn">＋ Новые гости</div>';
+  $('#tabs').innerHTML=tabs;
+  // header dates
+  const range=days.length?fmtShort(days[0].date)+' – '+fmtShort(days[days.length-1].date):'';
+  $('#planTitle').innerHTML='🗓️ План: '+esc(g.name)+' <span style="font-weight:600;color:#8a9aa1;font-size:15px">· '+range+' · '+days.length+' дн.</span>';
+  // overview
+  let ov='';days.forEach((d,i)=>{
+    ov+='<div class="ov-chip '+d.mode+'" data-go="day'+i+'">'
+      +'<div class="ov-d">Д'+(i+1)+' · '+fmtShort(d.date)+' '+dow(d.date)+'</div>'
+      +'<div class="ov-t">'+esc(d.title)+'</div>'
+      +'<div class="ov-badge '+d.mode+'">'+(d.mode==='car'?'🚗 машина':'🚶🚌 пешком')+'</div></div>';
+  });
+  $('#overview').innerHTML=ov;
+  // days
+  let dh='';days.forEach((d,i)=>{
+    const badge=d.mode==='car'?'<span class="badge car">🚗 машина · хозяин свободен</span>':'<span class="badge work">🚶🚌 пешком + автобус</span>';
+    const cards=d.places.map(placeCard).join('');
+    dh+='<div class="day '+d.mode+'" id="day'+i+'"><div class="day-head">'
+      +'<span class="daynum">Д'+(i+1)+'</span><div class="day-titles">'
+      +'<div class="date">'+fmtShort(d.date)+' · '+dow(d.date)+'</div>'
+      +'<div class="dtitle">'+esc(d.title)+'</div></div>'+badge+'</div>'
+      +'<p class="day-text">'+d.text+'</p><div class="cards">'+cards+'</div></div>';
+  });
+  $('#days').innerHTML=dh;
+  bind();
+}
+
+function bind(){
+  document.querySelectorAll('[data-tab]').forEach(el=>el.onclick=e=>{
+    if(e.target.dataset.del!==undefined)return;active=+el.dataset.tab;render();window.scrollTo({top:0,behavior:'smooth'});});
+  document.querySelectorAll('[data-del]').forEach(el=>el.onclick=e=>{
+    e.stopPropagation();const i=+el.dataset.del;
+    if(confirm('Удалить гостей «'+GUESTS[i].name+'»?')){GUESTS.splice(i,1);active=0;save();render();}});
+  document.querySelectorAll('[data-go]').forEach(el=>el.onclick=()=>{
+    const t=document.getElementById(el.dataset.go);if(t)t.scrollIntoView({behavior:'smooth'});});
+  const ab=$('#addBtn');if(ab)ab.onclick=openModal;
+}
+
+// ---- add guest modal ----
+function openModal(){
+  $('#overlay').classList.add('on');
+  $('#modal').innerHTML=''
+   +'<h3>Новые гости</h3><p class="hint">Введите имена и даты — план соберётся сам. Потом отметите, в какие дни есть машина.</p>'
+   +'<div class="field"><label>Имена гостей</label><input id="mName" placeholder="например: Мама и папа"></div>'
+   +'<div class="field"><label>Прилёт</label><input id="mArr" type="date"></div>'
+   +'<div class="field"><label>Вылет</label><input id="mDep" type="date"></div>'
+   +'<div class="btns"><button class="btn ghost" onclick="closeModal()">Отмена</button>'
+   +'<button class="btn primary" onclick="stepDays()">Далее →</button></div>';
+}
+function closeModal(){$('#overlay').classList.remove('on');}
+function stepDays(){
+  const name=$('#mName').value.trim()||'Гости';
+  const a=$('#mArr').value,b=$('#mDep').value;
+  if(!a||!b||parseD(b)<parseD(a)){alert('Проверьте даты: вылет должен быть не раньше прилёта.');return;}
+  const dates=[];for(let d=parseD(a);d<=parseD(b);d.setDate(d.getDate()+1))dates.push(iso(d));
+  let rows='';dates.forEach((ds,i)=>{
+    const first=i===0,last=i===dates.length-1;
+    const label='Д'+(i+1)+' · '+fmtShort(ds)+' '+dow(ds);
+    if(first||last){
+      rows+='<div class="dayrow"><span class="dl">'+label+'</span><span class="toggle car fixed">'+(first?'✈️ приезд':'✈️ отъезд')+'</span></div>';
+    }else{
+      rows+='<div class="dayrow"><span class="dl">'+label+'</span>'
+        +'<button class="toggle work" data-date="'+ds+'" onclick="tog(this)">🚶🚌 пешком</button></div>';
+    }
+  });
+  $('#modal').innerHTML='<h3>'+esc(name)+'</h3><p class="hint">Отметьте дни, когда будет машина (свободный день хозяина) — в них попадут поездки по острову. Остальные — пешие прогулки по Лимассолу.</p>'
+    +'<div style="max-height:44vh;overflow-y:auto;margin:4px 0">'+rows+'</div>'
+    +'<div class="btns"><button class="btn ghost" onclick="openModal()">← Назад</button>'
+    +'<button class="btn primary" onclick="createGuest(\''+encodeURIComponent(name)+'\',\''+a+'\',\''+b+'\')">🎉 Построить план</button></div>'
+    +'<div class="save-note">План сохранится в этом браузере</div>';
+}
+function tog(b){
+  if(b.classList.contains('work')){b.classList.remove('work');b.classList.add('car');b.textContent='🚗 машина';}
+  else{b.classList.remove('car');b.classList.add('work');b.textContent='🚶🚌 пешком';}
+}
+function createGuest(nameEnc,a,b){
+  const name=decodeURIComponent(nameEnc);
+  const carDates=[...document.querySelectorAll('.toggle.car[data-date]')].map(x=>x.dataset.date);
+  const g={id:'g'+Date.now(),name:name,custom:false,arrive:a,depart:b,carDates:carDates};
+  GUESTS.push(g);active=GUESTS.length-1;save();closeModal();render();window.scrollTo({top:0,behavior:'smooth'});
+}
+window.closeModal=closeModal;window.stepDays=stepDays;window.tog=tog;window.createGuest=createGuest;window.openModal=openModal;
+
+// static sections
+function renderStatic(){
+  // restaurants
+  let rh='';DATA.RESTOS.forEach(r=>{
+    const price='€'.repeat(r[6]);const rus=r[7]?'<span class="chip rus">🗣️ русский</span>':'';
+    rh+='<div class="rc"><div class="rc-img" style="background-image:url(\''+r[5]+'\')"><span class="rc-rat">'+r[1]+' ★</span></div>'
+      +'<div class="rc-body"><div class="rc-name">'+esc(r[0])+'</div>'
+      +'<div class="chips"><span class="chip price">'+price+'</span>'+rus+'</div>'
+      +'<p class="rc-note">'+esc(r[8])+'</p>'
+      +'<a class="route" style="font-size:12px;padding:6px 12px" href="https://www.google.com/maps/dir/?api=1&destination='+r[2]+','+r[3]+'&destination_place_id='+r[4]+'" target="_blank">📍 Маршрут</a></div></div>';
+  });
+  $('#restos').innerHTML=rh;
+  let bh='';DATA.BEACHES.forEach(k=>bh+=placeCard(k));
+  $('#beaches').innerHTML=bh;
+}
+
+load();render();renderStatic();
+</script>
+</body></html>
